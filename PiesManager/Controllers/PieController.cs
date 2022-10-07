@@ -13,14 +13,33 @@ namespace PiesManager.Controllers
     {
         private readonly PieRepository pieRepository;
 
-        public PieController(PieRepository pieRepository)
+        public PieController()
         {
-            this.pieRepository = pieRepository;
+            this.pieRepository = new PieRepository();
         }
 
         public IEnumerable<Pie> Get()
         {
             return pieRepository.GetAll();
         }
+
+        public string Post(Pie pie)
+        {
+            pieRepository.Add(pie);
+            return $"Torta {pie.Title} aggiunta";
+        }
+
+        public string Delete(int id)
+        {
+            pieRepository.Remove(id);
+            return $"Torta eliminata";
+        }
+
+        public string Put(Pie pie)
+        {
+            pieRepository.Update(pie);
+            return $"Torta {pie.Title} aggiornata";
+        }
+
     }
 }
