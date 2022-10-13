@@ -11,11 +11,11 @@ namespace PiesManager.Controllers
 {
     public class PieController : ApiController
     {
-        private readonly PieRepository pieRepository;
+        private readonly IPieRepository pieRepository;
 
-        public PieController()
+        public PieController(IPieRepository pieRepository)
         {
-            this.pieRepository = new PieRepository();
+            this.pieRepository = pieRepository;
         }
 
         public IEnumerable<Pie> Get()

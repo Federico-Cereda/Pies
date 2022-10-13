@@ -10,15 +10,6 @@ namespace PiesManager.Services
 {
     public class PiesDbContext : DbContext
     {
-        public PiesDbContext() : base("PiesDbContext")
-        {
-        }
-
         public DbSet<Pie> Pies { get; set; }
-
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
-        }
     }
 }

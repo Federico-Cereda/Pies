@@ -7,9 +7,14 @@ using System.Web;
 
 namespace PiesManager.Services
 {
-    public class PieRepository
+    public class PieRepository : IPieRepository
     {
-        private PiesDbContext db = new PiesDbContext();
+        private readonly PiesDbContext db;
+
+        public PieRepository(PiesDbContext db)
+        {
+            this.db = db;
+        }
 
         public IEnumerable<Pie> GetAll()
         {
