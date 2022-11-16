@@ -11,5 +11,6 @@ namespace PiesManager.Models
         public string Title { get; set; }
         public int Price { get; set; }
         public string Desc { get; set; }
+        public HttpPostedFileBase Image { get; set; }
     }
 }
