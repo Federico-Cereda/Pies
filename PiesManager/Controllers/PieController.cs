@@ -1,4 +1,5 @@
-﻿using PiesManager.Models;
+﻿using Antlr.Runtime;
+using PiesManager.Models;
 using PiesManager.Services;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ using System.Web.Http.Cors;
 
 namespace PiesManager.Controllers
 {
-    [EnableCors(origins: "*", headers: "*", methods: "")]
+    [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class PieController : ApiController
     {
         private readonly IPieRepository pieRepository;
@@ -21,29 +22,43 @@ namespace PiesManager.Controllers
             this.pieRepository = pieRepository;
         }
 
-        [EnableCors(origins: "*", headers: "*", methods: "")]
         public IEnumerable<Pie> Get()
         {
             return pieRepository.GetAll();
         }
 
-        [EnableCors(origins: "*", headers: "*", methods: "*")]
-        public string Post(HttpRequest pie)
+
+        public string Post()
         {
-            var title = HttpContext.Current.Request.Params["Title"];
-            //pieRepository.Add(pie);
-            //return $"Torta {pie.Title} aggiunta";
-            return null;
+            var httpRequest = HttpContext.Current.Request;
+
+            var title = httpRequest.Params["Title"];
+            var price = httpRequest.Params["Price"];
+            var desc = httpRequest.Params["Desc"];
+            var storePathToDb = string.Empty;
+
+            if (httpRequest.Files.Count > 0)
+            {   
+                foreach (string file in httpRequest.Files)
+                {
+                    var postedFile = httpRequest.Files[file];
+                    var filePath = HttpContext.Current.Server.MapPath("~/Images/" + postedFile.FileName);
+                    postedFile.SaveAs(filePath);
+                    storePathToDb = filePath;
+                }
+            }
+
+            var pie = new Pie { Title = title, Price = int.Parse(price), Desc = desc, Image = storePathToDb };
+            pieRepository.Add(pie);
+            return $"Torta {pie.Title} aggiunta";
         }
 
-        [EnableCors(origins: "*", headers: "*", methods: "*")]
         public string Delete(int id)
         {
             pieRepository.Remove(id);
             return $"Torta eliminata";
         }
 
-        [EnableCors(origins: "*", headers: "*", methods: "*")]
         public string Put(Pie pie)
         {
             pieRepository.Update(pie);
