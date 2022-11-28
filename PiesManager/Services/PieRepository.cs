@@ -41,17 +41,35 @@ namespace PiesManager.Services
             db.SaveChanges();
             if (db.Pies.Where(p => p.Image == image).FirstOrDefault() is null)
             {
-                var imagePath = "";
+                var path = Path.GetFileName(image);
+                var imagePath = HttpContext.Current.Server.MapPath("~/Images/" + path);
                 File.Delete(imagePath);
             }
         }
 
         public void Update(Pie pie)
         {
+            var image = db.Pies.AsNoTracking().FirstOrDefault(p => p.Id == pie.Id).Image;
             var update = db.Entry(pie);
             update.State = EntityState.Modified;
             db.SaveChanges();
+            if (db.Pies.Where(p => p.Image == image).FirstOrDefault() is null)
+            {
+                var path = Path.GetFileName(image);
+                var imagePath = HttpContext.Current.Server.MapPath("~/Images/" + path);
+                File.Delete(imagePath);
+            }
+            
+            var httpRequest = HttpContext.Current.Request;
+            if (httpRequest.Files.Count > 0)
+            {
+                foreach (string file in httpRequest.Files)
+                {
+                    var postedFile = httpRequest.Files[file];
+                    var filePath = HttpContext.Current.Server.MapPath("~/Images/" + postedFile.FileName);
+                    postedFile.SaveAs(filePath);
+                }
+            }
         }
-
     }
 }
