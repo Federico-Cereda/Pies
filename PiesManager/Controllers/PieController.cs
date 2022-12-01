@@ -27,7 +27,6 @@ namespace PiesManager.Controllers
             return pieRepository.GetAll();
         }
 
-
         public string Post()
         {
             var httpRequest = HttpContext.Current.Request;
