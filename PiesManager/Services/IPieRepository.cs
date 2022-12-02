@@ -4,15 +4,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace PiesManager.Services
 {
     public interface IPieRepository
     {
         IEnumerable<Pie> GetAll();
-        Pie Get(int id);
-        void Add(Pie pie);
+        void Add(HttpRequest httpRequest);
         void Remove(int id);
-        void Update(Pie pie);
+        void Update(HttpRequest httpRequest);
     }
 }

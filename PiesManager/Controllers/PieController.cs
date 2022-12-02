@@ -30,27 +30,8 @@ namespace PiesManager.Controllers
         public string Post()
         {
             var httpRequest = HttpContext.Current.Request;
-
-            var title = httpRequest.Params["Title"];
-            var price = httpRequest.Params["Price"];
-            var desc = httpRequest.Params["Desc"];
-            var storePathToDb = string.Empty;
-
-            if (httpRequest.Files.Count > 0)
-            {   
-                foreach (string file in httpRequest.Files)
-                {
-                    var postedFile = httpRequest.Files[file];
-                    var filePath = HttpContext.Current.Server.MapPath("~/Images/" + postedFile.FileName);
-                    var fileHttp = HttpContext.Current.Request.Url.AbsoluteUri.Replace("api/Pie", "Images/" + postedFile.FileName);
-                    postedFile.SaveAs(filePath);
-                    storePathToDb = fileHttp;
-                }
-            }
-
-            var pie = new Pie { Title = title, Price = int.Parse(price), Desc = desc, Image = storePathToDb };
-            pieRepository.Add(pie);
-            return $"Torta {pie.Title} aggiunta";
+            pieRepository.Add(httpRequest);
+            return $"Torta aggiunta";
         }
 
         public string Delete(int id)
@@ -62,31 +43,8 @@ namespace PiesManager.Controllers
         public string Put()
         {
             var httpRequest = HttpContext.Current.Request;
-
-            var id = httpRequest.Params["Id"];
-            var title = httpRequest.Params["Title"];
-            var price = httpRequest.Params["Price"];
-            var desc = httpRequest.Params["Desc"];
-            var storePathToDb = string.Empty;
-
-            if (httpRequest.Files.Count > 0)
-            {
-                foreach (string file in httpRequest.Files)
-                {
-                    var postedFile = httpRequest.Files[file];
-                    var filePath = HttpContext.Current.Request.Url.AbsoluteUri.Replace("api/Pie", "Images/" + postedFile.FileName);
-                    storePathToDb = filePath;
-                }
-            }
-
-            if (storePathToDb == "")
-            {
-                var pre = pieRepository.Get(int.Parse(id)).Image;
-                storePathToDb = pre;
-            }
-            var pie = new Pie { Id = int.Parse(id), Title = title, Price = int.Parse(price), Desc = desc, Image = storePathToDb };
-            pieRepository.Update(pie);
-            return $"Torta {pie.Title} aggiornata";
+            pieRepository.Update(httpRequest);
+            return $"Torta aggiornata";
         }
 
     }
